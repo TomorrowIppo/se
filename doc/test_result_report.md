@@ -16,6 +16,7 @@
 | 버전 | 날짜 | 작성자 성명 | 제/개정사항 | 비고 |
 |------|------|------------|------------|------|
 | 1.0  | 2026-06-16 | 김병진 | Mini Drive 테스트 결과 보고서 제정 | |
+| 1.1  | 2026-06-18 | 김병진 | 피드백 반영 (테스트 결과 표기 수정, 예외사항 보완, 환경 구성도 구조화 및 Mermaid 추가, 오타 수정) | |
 
 ---
 
@@ -97,57 +98,57 @@
 | Case ID | 입력값 : ID (Email) | 입력값: Password | 입력값: Name | 예상 결과 | 최종 결과 |
 |:---:|:---|:---|:---|:---:|:---:|
 | T1 | dynamic_drummer@kau.ac.kr | jazzfunk2026 | 김병진 | SUCCESS | SUCCESS |
-| T2 | drum_study_mentee | pass123 | 이효준 | FAIL | FAIL (형식오류) |
-| T3 | dynamic_drummer@kau.ac.kr | fusion999 | 박서준 | FAIL | FAIL (중복오류) |
-| T4 | inline_runner@kau.ac.kr | (공란) | 최민우 | FAIL | FAIL (입력누락) |
+| T2 | drum_study_mentee | pass123 | 이효준 | FAIL (형식오류 방가) | SUCCESS (형식오류 차단) |
+| T3 | dynamic_drummer@kau.ac.kr | fusion999 | 박서준 | FAIL (중복오류 방가) | SUCCESS (중복오류 차단) |
+| T4 | inline_runner@kau.ac.kr | (공란) | 최민우 | FAIL (입력누락 방가) | SUCCESS (입력누락 차단) |
 
-* 비고: DB에 저장된 올바른 기존 값 식별자는 dynamic_drummer@kau.ac.kr임.
+* 비고: DB에 저장된 올바른 기존 값 식별자는 dynamic_drummer@kau.ac.kr임. 예외 입력 시 시스템이 정상적으로 에러를 방어하고 차단했으므로 QA 관점에 따라 최종 결과를 SUCCESS로 표기함.
 
 ### 3.2 로그인 기능 테스트 결과 (U_02)
 
 | Case ID | 입력값 : ID (Email) | 입력값: Password | 예상 결과 | 최종 결과 |
 |:---:|:---|:---|:---:|:---:|
 | T5 | dynamic_drummer@kau.ac.kr | jazzfunk2026 | SUCCESS | SUCCESS |
-| T6 | dynamic_drummer@kau.ac.kr | wrong_pass | FAIL | FAIL (비번불일치) |
-| T7 | unknown_user@kau.ac.kr | jazzfunk2026 | FAIL | FAIL (계정없음) |
+| T6 | dynamic_drummer@kau.ac.kr | wrong_pass | FAIL (비번불일치 방가) | SUCCESS (비번불일치 차단) |
+| T7 | unknown_user@kau.ac.kr | jazzfunk2026 | FAIL (계정없음 방가) | SUCCESS (계정없음 차단) |
 
 ### 3.3 파일 업로드 기능 테스트 결과 (U_03)
 
 | Case ID | 테스트 항목 및 입력 조건 | 예상 결과 | 최종 결과 |
 |:---:|:---|:---:|:---:|
 | T8 | 크기 50MB인 'Spain_Live.mp3' 정상 업로드 시도 | SUCCESS | SUCCESS |
-| T9 | 크기 2.5GB인 거대 비디오 파일 업로드 시도 (제한 2GB) | FAIL | FAIL (크기초과) |
-| T10 | 업로드 중 인위적 네트워크 단절 유도 | FAIL | FAIL (재시도메시지) |
+| T9 | 크기 2.5GB인 거대 비디오 파일 업로드 시도 (제한 2GB) | FAIL (크기초과 방가) | SUCCESS (크기초과 차단) |
+| T10 | 업로드 중 인위적 네트워크 단절 유도 | FAIL (예외발생 방가) | SUCCESS (재시도 메시지 출력) |
 
 ### 3.4 파일 다운로드 기능 테스트 결과 (U_04)
 
 | Case ID | 테스트 항목 및 입력 조건 | 예상 결과 | 최종 결과 |
 |:---:|:---:|:---:|:---:|
 | T11 | 로그인된 사용자가 본인 소유의 'Fightman_Score.pdf' 다운로드 | SUCCESS | SUCCESS |
-| T12 | 비인가 사용자가 URL 다이렉트 접근을 통해 다운로드 시도 | FAIL | FAIL (접근거부) |
-| T13 | 메타데이터는 존재하나 스토리지 원본이 유실된 파일 요청 | FAIL | FAIL (파일없음) |
+| T12 | 비인가 사용자가 URL 다이렉트 접근을 통해 다운로드 시도 | FAIL (접근거부 방가) | SUCCESS (접근 차단 및 거부) |
+| T13 | 메타데이터는 존재하나 스토리지 원본이 유실된 파일 요청 | FAIL (파일없음 방가) | SUCCESS (에러 메시지 처리) |
 
 ### 3.5 폴더 생성 기능 테스트 결과 (U_05)
 
 | Case ID | 입력값 : 폴더명 | 테스트 상황 및 제약 | 예상 결과 | 최종 결과 |
 |:---:|:---|:---|:---:|:---:|
 | T14 | Jazz_Standard | 루트 경로에 신규 폴더 생성 | SUCCESS | SUCCESS |
-| T15 | Jazz_Standard | 동일 경로 내 중복 이름으로 생성 시도 | FAIL | FAIL (중복오류) |
-| T16 | (공란) | 빈 문자열로 생성 버튼 클릭 | FAIL | FAIL (입력오류) |
+| T15 | Jazz_Standard | 동일 경로 내 중복 이름으로 생성 시도 | FAIL (중복오류 방가) | SUCCESS (중복오류 차단) |
+| T16 | (공란) | 빈 문자열로 생성 버튼 클릭 | FAIL (입력오류 방가) | SUCCESS (입력오류 차단) |
 
 ### 3.6 공유 링크 생성 기능 테스트 결과 (U_06)
 
 | Case ID | 테스트 내용 | 예상 결과 | 최종 결과 |
 |:---:|:---|:---:|:---:|
 | T17 | 선택한 파일에 대해 만료시간 '24시간' 설정 후 링크 생성 | SUCCESS | SUCCESS |
-| T18 | 비공개 처리 규정이 적용된 보안 문서의 공유 링크 요청 | FAIL | FAIL (권한오류) |
+| T18 | 비공개 처리 규정이 적용된 보안 문서의 공유 링크 요청 | FAIL (권한오류 방가) | SUCCESS (권한 제한 확인) |
 
 ### 3.7 미디어 파일 재생 기능 테스트 결과 (U_07)
 
 | Case ID | 테스트 내용 및 입력 포맷 | 예상 결과 | 최종 결과 |
 |:---:|:---|:---:|:---:|
 | T19 | 오디오 스트리밍 타겟 파일 더블 클릭 ('Samba_Track.mp3') | YES (재생) | YES |
-| T20 | 지원하지 않는 코덱 파일 더블 클릭 ('Raw_Stream.avi') | FAIL | FAIL (재생불가) |
+| T20 | 지원하지 않는 코덱 파일 더블 클릭 ('Raw_Stream.avi') | FAIL (재생불가 방가) | SUCCESS (재생 불가 메시지 출력) |
 
 ---
 
@@ -155,9 +156,12 @@
 
 ### 4.1 중단 기준과 재개 조건
 
-| 중단 기준 | 재개 조건 |
-|:---|:---|
-| 시스템에서 허용하지 않는 파일 스키마 붕괴 또는 DB 세션이 완전히 다운되어 입출력이 불가능할 때 | 인프라 예외 격리 로직을 가동하여 비정상 트랜잭션을 롤백하고, 기존 안전 상태의 메타데이터를 백업본으로부터 복구하여 테스트를 재개한다. |
+| 구분 | 중단 기준 (Suspension Criteria) | 재개 조건 (Resumption Requirements) |
+|:---|:---|:---|
+| **데이터베이스 세션 다운** | 시스템에서 허용하지 않는 파일 스키마 붕괴 또는 DB 세션이 완전히 다운되어 입출력이 불가능할 때 | 인프라 예외 격리 로직을 가동하여 비정상 트랜잭션을 롤백하고, 기존 안전 상태의 메타데이터를 백업본으로부터 복구하여 테스트를 재개한다. |
+| **서버 연결 실패** | 백엔드 애플리케이션 서버가 정상 가동되지 않거나, 내부 게이트웨이 에러(502/504)로 인해 클라이언트 요청이 전면 차단될 때 | 서버 프로세스 상태를 점검 및 재시작하고, 헬스체크 API(Actuator 등)를 통해 정상 응답(200 OK)이 확인되면 테스트를 재개한다. |
+| **외부 스토리지 접근 실패** | AWS S3 등 외부 물리 스토리지의 인증/인가 만료 또는 네트워크 장애로 인해 실제 파일 바이너리 I/O가 영구 실패할 때 | 스토리지 커넥션 풀 및 Access Key 권한을 재검증하고, 파일 모의 업로드 테스트를 통해 연결 정합성이 확보되면 재개한다. |
+| **업로드 중 네트워크 단절** | 파일 업로드 스트리밍 도중 클라이언트-서버 간 소켓 연결이 강제로 유실되거나 타임아웃이 발생할 때 | 네트워크 인프라 상태를 복구한 후, 세션 만료 여부를 확인하고 미완료 파일 트랜잭션 청소 및 재로그인 후 업로드를 처음부터 재시도하여 재개한다. |
 
 ---
 
@@ -165,21 +169,21 @@
 
 ### 5.1 테스트 환경 구성도
 
-[Test Client: Web Browser] -- REST API / HTTPS --> [Mini Drive Backend Server]
-                                                            |
-                                           +----------------+----------------+
-                                           |                                 |
-                            [Metadata Repository: DB]        [Storage Repository: 외부 저장소]
+#### 5.1.1 컴포넌트 간 관계 정의 표
+| 출발지 (Source) | 목적지 (Destination) | 통신 프로토콜 / 방식 | 설명 |
+|:---|:---|:---|:---|
+| Test Client (Web Browser) | Mini Drive Backend Server | REST API / HTTPS | 사용자 UI 요청 송신 및 백엔드 비즈니스 로직 제어 요청 |
+| Mini Drive Backend Server | Metadata Repository (DB) | JDBC / SQL Connection | 파일/폴더 메타데이터 및 회원 암호화 계정 정보 정합성 검증 |
+| Mini Drive Backend Server | Storage Repository (외부 저장소) | Cloud Storage SDK / I/O Stream | 실제 물리 파일 바이너리 업로드 및 다운로드 스트리밍 제어 |
 
----
+#### 5.1.2 Mermaid 다이어그램 
+```mermaid
+graph TD
+    Client["Test Client<br>(Web Browser)"] -- "REST API / HTTPS" --> Server["Mini Drive Backend Server"]
+    Server -- "JDBC / Connection" --> DB[("Metadata Repository<br>(DB)")]
+    Server -- "SDK / Binary Stream" --> Storage["Storage Repository<br>(외부 저장소)"]
 
-## 6. 종합 테스트 결과 및 결론
-
-Mini Drive 시스템의 7가지 핵심 핵심 유스케이스를 기반으로 총 20개의 테스트 케이스를 설계하여 블랙박스 테스트를 진행했다. 
-
-테스트 결과, 회원가입 형식 제한 검증 및 컴포지트 패턴 기반의 폴더 계층 관리가 요구사항 명세서의 정의와 정확히 일치하여 정상 동작함을 확인했다. 비인가 접근 차단성 및 2GB 파일 업로드 제한 요구 제약조건 역시 트랜잭션 예외 처리를 통해 안정적으로 가동되었다. 결론적으로 본 시스템은 사용자 요구사항 분석 명세를 충족하여 성공적으로 검증 완료되었다.
-
----
-
-## 7. 부록
-* 없음 (상세 API 입출력 로그는 테스트 서버 로그 저장소 참조)
+    style Client fill:#f9f,stroke:#333,stroke-width:2px
+    style Server fill:#bbf,stroke:#333,stroke-width:2px
+    style DB fill:#fbf,stroke:#333,stroke-width:2px
+    style Storage fill:#fdb,stroke:#333,stroke-width:2px
